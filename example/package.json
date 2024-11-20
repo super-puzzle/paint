@@ -5,6 +5,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel",
-    "build": "rm -rf ./dist && parcel build"
+    "build": "rm -rf ./dist && parcel build --public-url=."
   }
 }
