@@ -16,7 +16,7 @@ export default class UpdateGlobalCoords extends BaseAction {
     paint.ctx.move.x = this.moveX
     paint.ctx.move.y = this.moveY
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   undo(paint: Paint) {
@@ -27,7 +27,7 @@ export default class UpdateGlobalCoords extends BaseAction {
     this.oldMoveX = 0
     this.oldMoveY = 0
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   free() {}

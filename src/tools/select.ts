@@ -48,7 +48,7 @@ class Select extends BaseTool {
     this.paint.ctx.move.x = Math.round(mouse.x - mouse.clickX) + this.cacheX
     this.paint.ctx.move.y = Math.round(mouse.y - mouse.clickY) + this.cacheY
 
-    this.paint.layersManager?.render(false)
+    this.paint.layersManager?.render(true)
   }
 
   dragEnd(event: MouseEvent | TouchEvent): void {
@@ -78,7 +78,7 @@ class Select extends BaseTool {
       )
     }
 
-    this.paint.layersManager?.render(false)
+    this.paint.layersManager?.render(true)
   }
 }
 

@@ -23,7 +23,7 @@ export default class UpdateLayerAction extends BaseAction {
       this.referenceLayer[i] = this.settings[i] as any
     }
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   undo(paint: Paint) {
@@ -35,7 +35,7 @@ export default class UpdateLayerAction extends BaseAction {
     }
     this.oldSettings = {}
     this.referenceLayer = null
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   free() {

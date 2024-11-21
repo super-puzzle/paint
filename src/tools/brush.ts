@@ -69,7 +69,7 @@ class Brush extends BaseTool {
     // TODO fix me
     segmentData?.push([mouse.x, mouse.y])
 
-    this.paint.layersManager?.render(false)
+    this.paint.layersManager?.render(true)
   }
 
   dragMove(event: MouseEvent | TouchEvent) {
@@ -94,7 +94,7 @@ class Brush extends BaseTool {
     // TODO fix me
     segmentData?.push([mouse.x, mouse.y])
 
-    this.paint.layersManager?.render(false)
+    this.paint.layersManager?.render(true)
   }
 
   dragEnd(event: MouseEvent | TouchEvent) {
@@ -112,7 +112,7 @@ class Brush extends BaseTool {
       return
     }
 
-    this.paint.layersManager?.render(false)
+    this.paint.layersManager?.render(true)
   }
 
   render(ctx: CanvasRenderingContext2D, layer: Layer) {

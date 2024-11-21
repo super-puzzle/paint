@@ -4,6 +4,7 @@ import BaseAction from './base'
 
 export default class InsertLayerAction extends BaseAction {
   previousLayer: Layer | null = null
+  id = new Date().valueOf()
   constructor(private settings: Partial<Layer>) {
     super('insert_layer')
   }
@@ -14,7 +15,7 @@ export default class InsertLayerAction extends BaseAction {
     this.previousLayer = paint.ctx.layer
 
     const defaultLayer: Layer = {
-      id: paint.ctx.layerAutoIncr,
+      id: this.id,
       type: null,
       order: paint.ctx.layerAutoIncr,
       opacity: 100,
@@ -35,7 +36,7 @@ export default class InsertLayerAction extends BaseAction {
     paint.ctx.layerAutoIncr++
     paint.ctx.layer = layer
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   undo(paint: Paint) {
@@ -45,7 +46,7 @@ export default class InsertLayerAction extends BaseAction {
     paint.ctx.layer = this.previousLayer
     this.previousLayer = null
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   free() {

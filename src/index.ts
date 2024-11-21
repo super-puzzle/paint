@@ -230,8 +230,12 @@ class Paint {
     return this.layersManager?.saveMask()
   }
 
-  back() {
+  undo() {
     this.state?.undoAction()
+  }
+
+  redo() {
+    this.state?.redoAction()
   }
 
   reset() {

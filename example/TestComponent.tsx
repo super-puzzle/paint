@@ -8,7 +8,7 @@ export function TestComponent() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const [toolname, setToolname] = useState('')
-  const [lineW, setLineW] = useState<number>()
+  const [lineW, setLineW] = useState<number>(15)
   const [resultUrl, setResultUrl] = useState('')
   useEffect(() => {
     const p = new Paint(canvasRef.current!, cursorRef.current!)
@@ -53,6 +53,20 @@ export function TestComponent() {
         }}
       >
         <p>操作栏：</p>
+        <button
+          onClick={() => {
+            ref.current?.undo()
+          }}
+        >
+          撤销↩️
+        </button>
+        <button
+          onClick={() => {
+            ref.current?.redo()
+          }}
+        >
+          重做↪️
+        </button>
         <button
           onClick={() => {
             ref.current?.selectBrush()

@@ -48,7 +48,7 @@ class State {
   }
 
   redoAction() {
-    if (this.canUndo()) {
+    if (this.canRedo()) {
       const action = this.actionHistory[this.actionHistoryIndex]
       action.do(this.paint)
       this.actionHistoryIndex++

@@ -38,10 +38,9 @@ class LayersManager {
     this.render(true)
   }
 
-  render(force: boolean) {
-    if (force !== true) {
+  render(force?: boolean) {
+    if (force === true) {
       this.paint.ctx.needRender = true
-      return
     }
 
     if (this.paint.ctx.needRender === true) {
@@ -64,7 +63,7 @@ class LayersManager {
     }
 
     this.frameId = requestAnimationFrame(() => {
-      this.render(true)
+      this.render(false)
     })
   }
 

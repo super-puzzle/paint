@@ -27,7 +27,7 @@ export default class BundleAction extends BaseAction {
       throw err
     }
 
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   undo(paint: Paint) {
@@ -35,7 +35,7 @@ export default class BundleAction extends BaseAction {
     for (let i = this.actions.length - 1; i >= 0; i--) {
       this.actions[i].undo(paint)
     }
-    paint.layersManager?.render(false)
+    paint.layersManager?.render(true)
   }
 
   free() {
