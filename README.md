@@ -9,4 +9,4 @@ reference to `./example/TestComponent.tsx`
 
 # Install
 
-`npm install @coocooooo/paint`
+`npm install @yuzhouu/paint`
