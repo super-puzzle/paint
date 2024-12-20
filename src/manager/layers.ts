@@ -49,7 +49,7 @@ class LayersManager {
       const sortedLayers = this.getSortedLayers()
       this.renderObjects(this.ctx, sortedLayers)
 
-      this.renderBottomImage()
+      this.renderBottomImage(this.ctx)
       // 定位角 debug 用
       // this.ctx.save()
       // this.ctx.fillStyle = 'red'
@@ -60,6 +60,8 @@ class LayersManager {
       // this.ctx.restore()
       this.afterRender()
       this.lastZoom = this.paint.ctx.zoom.multiple
+
+      this.paint.emitter.emit('canvasUpdate')
     }
 
     this.frameId = requestAnimationFrame(() => {
@@ -89,7 +91,7 @@ class LayersManager {
   }
 
   // 绘制底图
-  renderBottomImage() {
+  renderBottomImage(canvasCtx: CanvasRenderingContext2D) {
     if (!this.paint.ctx.bottomImage) {
       return
     }
@@ -110,46 +112,47 @@ class LayersManager {
       drawH = canvasH
     }
 
-    this.ctx.save()
-    this.ctx.translate(this.paint.ctx.WIDTH / 2, this.paint.ctx.HEIGHT / 2)
-    this.ctx.globalCompositeOperation = 'destination-over'
-    this.ctx.drawImage(
+    canvasCtx.save()
+    canvasCtx.translate(this.paint.ctx.WIDTH / 2, this.paint.ctx.HEIGHT / 2)
+    canvasCtx.globalCompositeOperation = 'destination-over'
+    canvasCtx.drawImage(
       this.paint.ctx.bottomImage,
       -drawW / 2,
       -drawH / 2,
       drawW,
       drawH
     )
-    this.ctx.restore()
+    canvasCtx.restore()
 
     // 根据图片坐标，绘制全局的 mask，只展示 mask 后的 canvas
-    this.ctx.save()
-    this.ctx.translate(this.paint.ctx.WIDTH / 2, this.paint.ctx.HEIGHT / 2)
-    this.ctx.globalCompositeOperation = 'destination-in'
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 1)'
-    this.ctx.fillRect(-drawW / 2, -drawH / 2, drawW, drawH)
-    this.ctx.restore()
+    canvasCtx.save()
+    canvasCtx.translate(this.paint.ctx.WIDTH / 2, this.paint.ctx.HEIGHT / 2)
+    canvasCtx.globalCompositeOperation = 'destination-in'
+    canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+    canvasCtx.fillRect(-drawW / 2, -drawH / 2, drawW, drawH)
+    canvasCtx.restore()
   }
 
-  saveMask() {
-    if (this.paint.ctx.bottomImage === null) {
-      return
-    }
-
+  saveMaskCanvas(
+    fillColor: string = '#000000',
+    maskColor: [number, number, number, number] = [255, 255, 255, 255]
+  ) {
     const newCanvas = document.createElement('canvas')
     newCanvas.width = this.canvas.width
     newCanvas.height = this.canvas.height
     const newCtx = newCanvas.getContext('2d')!
 
     newCtx.save()
-    newCtx.fillStyle = '#000000'
+    newCtx.fillStyle = fillColor
     newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height)
     const sortedLayers = this.getSortedLayers()
     const newLayers = sortedLayers.map(item => {
       if (item.type === 'brush') {
         return {
           ...item,
-          color: '#ffffff',
+          color: `rgba(${maskColor.slice(0, 3).join(',')}, ${
+            maskColor[3] / 255
+          })`,
         }
       }
       if (item.type === 'image' && item.linkCanvas) {
@@ -170,10 +173,10 @@ class LayersManager {
           const b = oldData.data[i + 2]
           const a = oldData.data[i + 3]
           if (r + g + b + a !== 0) {
-            newData[i] = 255
-            newData[i + 1] = 255
-            newData[i + 2] = 255
-            newData[i + 3] = 255
+            newData[i] = maskColor[0]
+            newData[i + 1] = maskColor[1]
+            newData[i + 2] = maskColor[2]
+            newData[i + 3] = maskColor[3]
           } else {
             newData[i] = 0
             newData[i + 1] = 0
@@ -197,6 +200,16 @@ class LayersManager {
     })
     this.renderObjects(newCtx, newLayers)
     newCtx.restore()
+
+    return newCanvas
+  }
+
+  saveMask() {
+    if (this.paint.ctx.bottomImage === null) {
+      return
+    }
+
+    const newCanvas = this.saveMaskCanvas()
 
     /** save image */
     const imgW = this.paint.ctx.bottomImage.naturalWidth

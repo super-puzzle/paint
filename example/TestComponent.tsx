@@ -7,6 +7,8 @@ export function TestComponent() {
   const ref = useRef<Paint>()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
+  const previewRef = useRef<HTMLCanvasElement>(null)
+  const previewBgRef = useRef<HTMLCanvasElement>(null)
   const [toolname, setToolname] = useState('')
   const [lineW, setLineW] = useState<number>(15)
   const [resultUrl, setResultUrl] = useState('')
@@ -18,6 +20,32 @@ export function TestComponent() {
     p.selectBrush()
     setToolname('笔刷')
     ref.current = p
+
+    p.emitter.on('canvasUpdate', () => {
+      if (!previewRef.current) return
+      if (!previewBgRef.current) return
+      const previewCanvas = previewRef.current
+      const previewBgCanvas = previewBgRef.current
+      const maskCanvas = p.layersManager.saveMaskCanvas(
+        'rgba(0,0,0, 0)',
+        [0, 0, 0, 255]
+      )
+      previewCanvas.width = maskCanvas.width
+      previewCanvas.height = maskCanvas.height
+      previewBgCanvas.width = maskCanvas.width
+      previewBgCanvas.height = maskCanvas.height
+
+      const bgCtx = previewBgCanvas.getContext('2d')!
+      p.layersManager.renderBottomImage(bgCtx)
+      bgCtx.fillStyle = 'rgba(0,0,0,0.5)'
+      bgCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height)
+
+      const canvasCtx = previewCanvas.getContext('2d')!
+      canvasCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height)
+      p.layersManager.renderBottomImage(canvasCtx)
+      canvasCtx.globalCompositeOperation = 'destination-in'
+      canvasCtx.drawImage(maskCanvas, 0, 0)
+    })
   }, [])
   return (
     <div>
@@ -25,6 +53,8 @@ export function TestComponent() {
       <div
         style={{
           position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <canvas
@@ -33,6 +63,45 @@ export function TestComponent() {
           style={{ width: '500px', height: '500px' }}
           ref={canvasRef}
         ></canvas>
+
+        <div
+          style={{
+            position: 'relative',
+            width: '500px',
+            height: '500px',
+          }}
+        >
+          <canvas
+            width={500}
+            height={500}
+            style={{
+              width: '500px',
+              height: '500px',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+            }}
+            ref={previewBgRef}
+          ></canvas>
+          <canvas
+            width={500}
+            height={500}
+            style={{
+              width: '500px',
+              height: '500px',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              zIndex: 2,
+            }}
+            ref={previewRef}
+          ></canvas>
+        </div>
+
         <div
           style={{
             position: 'absolute',
