@@ -3,10 +3,14 @@
 为图片生成蒙版图
 generate mask for image。
 
-# Doc
+## Doc
 
 reference to `./example/TestComponent.tsx`
 
-# Install
+## Install
 
-`npm install @yuzhouu/paint`
+`npm install @super-puzzle/paint`
+
+## Demo
+
+[https://super-puzzle.github.io/paint/](https://super-puzzle.github.io/paint/)
