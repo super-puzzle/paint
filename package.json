@@ -1,6 +1,6 @@
 {
   "name": "@yuzhouu/paint",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "canvas generate mask for image",
   "source": "src/index.ts",
   "main": "dist/index.js",

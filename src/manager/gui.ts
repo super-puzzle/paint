@@ -24,7 +24,6 @@ class Gui {
     const canvasRect = $el.getBoundingClientRect()
     this.canvasOffset.x = canvasRect.left - bodyRect.left
     this.canvasOffset.y = canvasRect.top - bodyRect.top
-    console.log(this.canvasOffset.x, this.canvasOffset.y)
     this.canvasWidth = canvasRect.width * this.paint.ctx.DPR
     this.canvasHeight = canvasRect.height * this.paint.ctx.DPR
     $el.width = canvasRect.width * this.paint.ctx.DPR
