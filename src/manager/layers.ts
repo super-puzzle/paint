@@ -214,8 +214,8 @@ class LayersManager {
     /** save image */
     const imgW = this.paint.ctx.bottomImage.naturalWidth
     const imgH = this.paint.ctx.bottomImage.naturalHeight
-    const canvasW = Math.floor(this.paint.ctx.WIDTH)
-    const canvasH = Math.floor(this.paint.ctx.HEIGHT)
+    const canvasW = Math.floor(newCanvas.width)
+    const canvasH = Math.floor(newCanvas.height)
     let drawW = imgW
     let drawH = imgH
     if (imgW / imgH > canvasW / canvasH) {
